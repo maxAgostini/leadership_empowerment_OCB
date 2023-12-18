@@ -1,0 +1,110 @@
+---
+title: "Leadership Empowerment OCB"
+author: "Maximilian Agostini"
+date: "2023-12-18"
+output: html_document
+---
+
+## Environment Setup
+
+```{r}
+#| label: setup
+#| include: false
+
+# R Studio Clean-Up
+cat("\014") # clear console
+rm(list = setdiff(ls(), "megaList")) # clear workspace - use restart R instead [cmd/alt + shift + F10]
+# rm(list = ls()) # clear workspace - use restart R instead [cmd/alt + shift + F10]
+gc() # garbage collector
+
+require(pacman)
+pacman::p_load(dplyr, tidyr)
+
+anytime::addFormats("%d-%m-%Y %H:%M:%S")  ## add format to anytime package (not default)
+anytime::addFormats("%Y-%m-%d %H:%M:%S")
+anytime::addFormats("%d-%m-%Y")  
+#options(rgl.useNULL = TRUE)
+
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file()) # set working directory
+knitr::opts_knit$get("root.dir") # check working directory
+options(
+  scipen = 999,
+  digits = 4,
+  width = 400
+) # removes scientific quotation
+# knitr::opts_chunk$set(echo = TRUE, cache = F, cache.path = rprojroot::find_rstudio_root_file('cache/')) # cache settings
+knitr::knit_hooks$set(
+  error = function(x, options) {
+    paste('\n\n<div class="alert alert-danger">',
+          gsub("##", "\n", gsub("^##\ Error", "**Error**", x)),
+          "</div>",
+          sep = "\n"
+    )
+  },
+  warning = function(x, options) {
+    paste('\n\n<div class="alert alert-warning">',
+          gsub("##", "\n", gsub("^##\ Warning:", "**Warning**", x)),
+          "</div>",
+          sep = "\n"
+    )
+  },
+  message = function(x, options) {
+    paste('\n\n<div class="alert alert-info">',
+          gsub("##", "\n", x),
+          "</div>",
+          sep = "\n"
+    )
+  }
+)
+htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+
+# Global Chunk Options
+knitr::opts_chunk$set(
+  fig.width = 12,
+  fig.height = 8,
+  fig.path = "Figures/",
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## load data
+```{r}
+data_raw <- sjlabelled::read_spss(spss_file)
+```
+
+## prep data
+### select vars
+```{r}
+data_select <- data_raw %>% 
+  select(
+    
+  )
+```
+
+## save data
+```{r}
+data_out <- data_select
+id <- "leadership_empowerment_ocb"
+
+export_names <- list(
+  spss = paste0("data/sharing/", id, ".sav"),
+  csv = paste0("data/sharing/", id, ".csv"),
+  csv_labeled = paste0("data/sharing/", id, "_labeled.csv"),
+  r = paste0("data/sharing/", id, ".rds")
+)
+
+haven::write_sav(data_out, export_names$spss)
+write.csv(data_out, export_names$csv)
+save(data_out, file = export_names$r)
+writexl::write_xlsx(data_out, export_names$xlsx)
+cat(paste0("All outputs saved for request: ", id))
+```
+
+
+## run all
+```{r}
+
+```
+
