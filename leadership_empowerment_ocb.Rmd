@@ -71,7 +71,7 @@ knitr::opts_chunk$set(
 
 ## load data
 ```{r}
-data_raw <- sjlabelled::read_spss(spss_file)
+data_raw <- sjlabelled::read_spss("data/raw/David Master Thesis Dec 18 2023.sav")
 ```
 
 ## prep data
@@ -79,8 +79,23 @@ data_raw <- sjlabelled::read_spss(spss_file)
 ```{r}
 data_select <- data_raw %>% 
   select(
-    
+    -ends_with("Date"),
+    -contains("_DO_"),
+    -starts_with("Recipient"),
+    -starts_with("Location"),
+    -DistributionChannel,
+    -UserLanguage,
+    -IPAddress,
+    -ExternalReference,
+    -Debrief
   )
+
+# Find the dropped columns
+dropped_columns <- setdiff(names(data_raw), names(data_select))
+
+# Print the dropped columns to the console
+cat("Dropped columns: ", paste(dropped_columns, collapse = ", "), "\n")
+rm(dropped_columns)
 ```
 
 ## save data
@@ -91,14 +106,12 @@ id <- "leadership_empowerment_ocb"
 export_names <- list(
   spss = paste0("data/sharing/", id, ".sav"),
   csv = paste0("data/sharing/", id, ".csv"),
-  csv_labeled = paste0("data/sharing/", id, "_labeled.csv"),
   r = paste0("data/sharing/", id, ".rds")
 )
 
 haven::write_sav(data_out, export_names$spss)
 write.csv(data_out, export_names$csv)
 save(data_out, file = export_names$r)
-writexl::write_xlsx(data_out, export_names$xlsx)
 cat(paste0("All outputs saved for request: ", id))
 ```
 
