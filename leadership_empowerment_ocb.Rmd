@@ -71,7 +71,7 @@ knitr::opts_chunk$set(
 
 ## load data
 ```{r}
-data_raw <- sjlabelled::read_spss("data/raw/David Master Thesis Dec 18 2023.sav")
+data_raw <- sjlabelled::read_spss("data/raw/David Master Thesis.sav")
 ```
 
 ## prep data
